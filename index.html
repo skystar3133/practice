@@ -1,13 +1,198 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>practice</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>블로그 자동작성 시스템</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 60px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; font-weight: 700; }
+        .subtitle { font-size: 1.1em; opacity: 0.95; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .card-image { width: 100%; height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: 3em; font-weight: bold; }
+        .card-image.claude { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-image.family { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-content { padding: 30px; }
+        .card-title { font-size: 1.4em; color: #333; margin-bottom: 10px; font-weight: 600; }
+        .card-desc { color: #666; line-height: 1.6; margin-bottom: 20px; }
+        .card-meta { display: flex; justify-content: space-between; font-size: 0.85em; color: #999; margin-bottom: 20px; }
+        .btn { display: block; padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 6px; font-weight: 600; text-align: center; }
+        .btn:hover { opacity: 0.9; }
+        .system-info { background: white; border-radius: 12px; padding: 30px; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .system-info h2 { color: #333; margin-bottom: 20px; font-size: 1.3em; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .info-item { padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea; }
+        .info-label { font-weight: 600; color: #667eea; margin-bottom: 5px; }
+        footer { text-align: center; color: rgba(255,255,255,0.8); margin-top: 60px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); }
+        article { background: white; padding: 40px; border-radius: 12px; line-height: 1.8; max-width: 900px; margin: 0 auto; }
+        article h1, article h2, article h3 { color: #333; margin-top: 30px; margin-bottom: 15px; }
+        article p { margin-bottom: 15px; }
+        article ul { margin-left: 30px; margin-bottom: 15px; }
+        article img { max-width: 100%; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 블로그 자동작성 시스템</h1>
+            <p class="subtitle">AI 에이전트 기반 완전 자동화된 한국어 블로그 글 생성</p>
+        </header>
+
+        <div class="grid" id="home-grid">
+            <div class="card">
+                <div class="card-image claude">💻</div>
+                <div class="card-content">
+                    <h3 class="card-title">Claude Code 핵심 기능</h3>
+                    <p class="card-desc">AI 기반 에이전트형 코딩 도구의 핵심 3가지 기능을 소개합니다.</p>
+                    <div class="card-meta">
+                        <span>📖 700+ 단어</span>
+                        <span>🖼️ 4개 이미지</span>
+                    </div>
+                    <a href="#/claude-code" class="btn">글 읽기</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image family">✈️</div>
+                <div class="card-content">
+                    <h3 class="card-title">1박2일 가족여행 완벽 준비법</h3>
+                    <p class="card-desc">주말 가족 여행을 완벽하게 준비하는 방법. 실용적인 팁을 모았습니다.</p>
+                    <div class="card-meta">
+                        <span>📖 700+ 단어</span>
+                        <span>🖼️ 4개 이미지</span>
+                    </div>
+                    <a href="#/family-travel" class="btn">글 읽기</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="system-info" id="info-section">
+            <h2>🚀 시스템 구조</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">📊 Researcher</div>
+                    <div>신뢰도 높은 정보 수집 (5+ 출처)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">✍️ Writer</div>
+                    <div>SEO 최적화 글 작성 (600+ 단어)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">🎨 ImageMaker</div>
+                    <div>자동 이미지 생성 (4개 + 썸네일)</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">🔧 Assembler</div>
+                    <div>최종 파일 통합 및 검증</div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>블로그 자동작성 시스템 | Powered by Claude Code | 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        const routes = {
+            'claude-code': 'output/draft_final.md',
+            'family-travel': 'output/draft-family-trip-final.md'
+        };
+
+        function showHome() {
+            document.querySelector('.container').innerHTML = `
+                <header>
+                    <h1>📚 블로그 자동작성 시스템</h1>
+                    <p class="subtitle">AI 에이전트 기반 완전 자동화된 한국어 블로그 글 생성</p>
+                </header>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-image claude">💻</div>
+                        <div class="card-content">
+                            <h3 class="card-title">Claude Code 핵심 기능</h3>
+                            <p class="card-desc">AI 기반 에이전트형 코딩 도구의 핵심 3가지 기능을 소개합니다.</p>
+                            <div class="card-meta">
+                                <span>📖 700+ 단어</span>
+                                <span>🖼️ 4개 이미지</span>
+                            </div>
+                            <a href="#/claude-code" class="btn">글 읽기</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-image family">✈️</div>
+                        <div class="card-content">
+                            <h3 class="card-title">1박2일 가족여행 완벽 준비법</h3>
+                            <p class="card-desc">주말 가족 여행을 완벽하게 준비하는 방법. 실용적인 팁을 모았습니다.</p>
+                            <div class="card-meta">
+                                <span>📖 700+ 단어</span>
+                                <span>🖼️ 4개 이미지</span>
+                            </div>
+                            <a href="#/family-travel" class="btn">글 읽기</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="system-info">
+                    <h2>🚀 시스템 구조</h2>
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">📊 Researcher</div><div>신뢰도 높은 정보 수집 (5+ 출처)</div></div>
+                        <div class="info-item"><div class="info-label">✍️ Writer</div><div>SEO 최적화 글 작성 (600+ 단어)</div></div>
+                        <div class="info-item"><div class="info-label">🎨 ImageMaker</div><div>자동 이미지 생성 (4개 + 썸네일)</div></div>
+                        <div class="info-item"><div class="info-label">🔧 Assembler</div><div>최종 파일 통합 및 검증</div></div>
+                    </div>
+                </div>
+                <footer>
+                    <p>블로그 자동작성 시스템 | Powered by Claude Code | 2026</p>
+                </footer>
+            `;
+        }
+
+        function loadMarkdown(file) {
+            fetch(file)
+                .then(r => r.text())
+                .then(md => {
+                    const html = md
+                        .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+                        .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
+                        .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">')
+                        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2">$1</a>')
+                        .replace(/^- (.*?)$/gm, '<li>$1</li>')
+                        .replace(/^(\d+)\. (.*?)$/gm, '<li>$2</li>')
+                        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                        .replace(/\n\n+/g, '</p><p>')
+                        .replace(/^([^<].*?)$/gm, m => m.startsWith('<') ? m : `<p>${m}</p>`);
+
+                    document.querySelector('.container').innerHTML = `
+                        <a href="#/" style="color: #667eea; text-decoration: none; margin-bottom: 20px; display: inline-block;">← 목록으로</a>
+                        <article>${html}</article>
+                    `;
+                })
+                .catch(() => {
+                    document.querySelector('.container').innerHTML = '<p style="padding: 40px;">파일을 로드할 수 없습니다. <a href="#/">돌아가기</a></p>';
+                });
+        }
+
+        window.addEventListener('hashchange', () => {
+            const path = window.location.hash.substring(2);
+            if (path && routes[path]) {
+                loadMarkdown(routes[path]);
+            } else {
+                showHome();
+            }
+        });
+
+        window.addEventListener('load', () => {
+            const path = window.location.hash.substring(2);
+            if (path && routes[path]) {
+                loadMarkdown(routes[path]);
+            }
+        });
+    </script>
+</body>
 </html>
